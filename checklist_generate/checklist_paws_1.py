@@ -524,4 +524,9 @@ def back_trans(in_path, out_path):
 
 if __name__ == '__main__': 
     add_drop('paws_para.txt', 'adversarial test/paws_1/add_drop.txt')
+    negation('paws_para.txt', 'adversarial test/paws_1/negation.txt')
+    mistranslation('paws_para.txt', 'adversarial test/paws_1/word.txt')
+    num('paws_para.txt', 'adversarial test/paws_1/num.txt')
+    pronoun('paws_para.txt', 'adversarial test/paws_1/pron.txt')
+    name('paws_para.txt', 'adversarial test/paws_1/name.txt')
     

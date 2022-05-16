@@ -574,5 +574,10 @@ def back_trans(in_path, out_path):
 
 
 if __name__ == '__main__': 
-    add_drop('desr.txt', 'adversarial test/wmt/de/add_drop.txt')
+    add_drop('paws_para.txt', 'adversarial test/wmt/de/add_drop.txt')
+    negation('paws_para.txt', 'adversarial test/wmt/de/negation.txt')
+    mistranslation('paws_para.txt', 'adversarial test/wmt/de/word.txt')
+    num('paws_para.txt', 'adversarial test/wmt/de/num.txt')
+    pronoun('paws_para.txt', 'adversarial test/wmt/de/pron.txt')
+    name('paws_para.txt', 'adversarial test/wmt/de/name.txt')
     

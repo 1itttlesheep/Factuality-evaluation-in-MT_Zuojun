@@ -484,4 +484,9 @@ def num(ref_path, out_path):
 
 if __name__ == '__main__': 
     add_drop('paws_para.txt', 'adversarial test/paws_2/add_drop.txt')
+    negation('paws_para.txt', 'adversarial test/paws_2/negation.txt')
+    mistranslation('paws_para.txt', 'adversarial test/paws_2/word.txt')
+    num('paws_para.txt', 'adversarial test/paws_2/num.txt')
+    pronoun('paws_para.txt', 'adversarial test/paws_2/pron.txt')
+    name('paws_para.txt', 'adversarial test/paws_2/name.txt')
     
