@@ -8,4 +8,4 @@ To generate templates on wmt dataset, unpack [news-commentary-v15.de-en.zip](che
 The texts used in the experiments are in the folder "adversarial text".
 
 # Experiment
-Run [metric_eval.py] to reproduce the experiment result on Checklist templates.
+Run [metric_eval.py](experiments/metric_eval.py) to reproduce the experiment result on Checklist templates.
