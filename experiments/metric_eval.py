@@ -1,4 +1,6 @@
 from collections import defaultdict
+
+
 def get_data(path, dataset):
     src = []
     ref = []
@@ -111,12 +113,28 @@ def bleurt_eval(ref, hyp1, hyp2):
     print('bleurt: %f' % (accuracy))
 
 if __name__ == '__main__': 
+    
+    # wmt test
     src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('../checklist_generate/adversarial test/wmt/de/name.txt', 'wmt')
     bart_eval(d_r, hyp1, hyp2)
     bleurt_eval(d_r, hyp1, hyp2)
     bert_eval(d_r, hyp1, hyp2)
     mover_eval(d_r, hyp1, hyp2)
     xmover_eval(src, ref, hyp2)
+    
+    # paws1 test
+    src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('../checklist_generate/adversarial test/paws_1/name.txt', 'paws')
+    bart_eval(d_r, hyp1, hyp2)
+    bleurt_eval(d_r, hyp1, hyp2)
+    bert_eval(d_r, hyp1, hyp2)
+    mover_eval(d_r, hyp1, hyp2)
+    
+    # paws2 test
+    src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('../checklist_generate/adversarial test/paws_2/name.txt', 'paws')
+    bart_eval(d_r, hyp1, hyp2)
+    bleurt_eval(d_r, hyp1, hyp2)
+    bert_eval(d_r, hyp1, hyp2)
+    mover_eval(d_r, hyp1, hyp2)
     
 
     
