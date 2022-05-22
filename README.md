@@ -9,3 +9,5 @@ The texts used in the experiments are in the folder "adversarial text".
 
 # Experiment
 Run [metric_eval.py](experiments/metric_eval.py) to reproduce the experiment result on Checklist templates. Change the first paramator of the function "get_data()" to get the result of different phenomenon and dataset.
+
+Run [NLI_metric.py](experiments/NLI_metric.py) to reproduce the NLI output on the Checklist datasets. The results are in the "experiments/nli_result" folder. Run [NLI_comp.py](experiments/NLI_comp.py) to compair different formulas of the NLI metrics. Run[combined_metric.py](experiments/combined_metric.py) to test the performance of NLI model combined with other metrics.
