@@ -2,24 +2,21 @@ from transformers import AutoTokenizer
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-def nli_score(premises, hypothesiss):
+def nli_score(premises, hypothesiss, model):
     max_length = 256
-    hg_model_hub_name = "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli"
-    # hg_model_hub_name = "ynie/albert-xxlarge-v2-snli_mnli_fever_anli_R1_R2_R3-nli"
-    # hg_model_hub_name = "ynie/bart-large-snli_mnli_fever_anli_R1_R2_R3-nli"
-    # hg_model_hub_name = "ynie/electra-large-discriminator-snli_mnli_fever_anli_R1_R2_R3-nli"
-    # hg_model_hub_name = "ynie/xlnet-large-cased-snli_mnli_fever_anli_R1_R2_R3-nli"
-    #hg_model_hub_name = 'prajjwal1/bert-medium-mnli'
-    #hg_model_hub_name = 'microsoft/deberta-large-mnli'
+    if model == 1:
+        hg_model_hub_name = "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli"
+    elif model == 2:
+        hg_model_hub_name = 'microsoft/deberta-large-mnli'
+    else:
+        print("model number error")
 
     tokenizer = AutoTokenizer.from_pretrained(hg_model_hub_name)
     model = AutoModelForSequenceClassification.from_pretrained(hg_model_hub_name)
     
     res = []
-    i = 0
     for premise, hypothesis in zip(premises, hypothesiss):
-        i = i+1
-        print(i)
+        
         tokenized_input_seq_pair = tokenizer.encode_plus(premise, hypothesis,
                                                         max_length=max_length,
                                                         return_token_type_ids=True, truncation=True)
@@ -47,7 +44,6 @@ def nli_score(premises, hypothesiss):
                                                         return_token_type_ids=True, truncation=True)
 
         input_ids_conv = torch.Tensor(tokenized_input_seq_pair_conv['input_ids']).long().unsqueeze(0)
-        # remember bart doesn't have 'token_type_ids', remove the line below if you are using bart.
         token_type_ids_conv = torch.Tensor(tokenized_input_seq_pair_conv['token_type_ids']).long().unsqueeze(0)
         attention_mask_conv = torch.Tensor(tokenized_input_seq_pair_conv['attention_mask']).long().unsqueeze(0)
 
@@ -74,79 +70,80 @@ def nli_score(premises, hypothesiss):
             n1 = predicted_probability_conv[1]
             c1 = predicted_probability_conv[2]
         
-        # e = 0
-        # n = 0
-        # c = 0
         
-        # if predicted_probability[0] >= 0.1 or predicted_probability_conv[0] >= 0.1:
-        #     if predicted_probability[2] >= 0.1 or predicted_probability_conv[2] >= 0.1:
-        #         if predicted_probability[2] >= predicted_probability_conv[2]:
-        #             e = predicted_probability[0]
-        #             n = predicted_probability[1]
-        #             c = predicted_probability[2]
-        #         else:
-        #             e = predicted_probability_conv[0]
-        #             n = predicted_probability_conv[1]
-        #             c = predicted_probability_conv[2]
-        #     else:    
-        #         if predicted_probability[0] < predicted_probability_conv[0]:
-        #             e = predicted_probability[0]
-        #             n = predicted_probability[1]
-        #             c = predicted_probability[2]
-        #         else:
-        #             e = predicted_probability_conv[0]
-        #             n = predicted_probability_conv[1]
-        #             c = predicted_probability_conv[2]
-        # else:
-        #     if predicted_probability[2] >= predicted_probability_conv[2]:
-        #         e = predicted_probability[0]
-        #         n = predicted_probability[1]
-        #         c = predicted_probability[2]
-        #     else:
-        #         e = predicted_probability_conv[0]
-        #         n = predicted_probability_conv[1]
-        #         c = predicted_probability_conv[2]
-                
         res.append(([e,n,c], [e1,n1,c1]))
         
     return res
         
         
 
-def build_list(filename):
+def NLI_score_write(phenomenon, model, dataset):
     datalist = []
-    with open(filename, 'r', encoding='utf-8') as f:
+    with open('../checklist_generate/adversarial test/wmt/'+ phenomenon +'.txt', 'r', encoding='utf-8') as f:
         lines = f.readlines()
         for line in lines:
             l = line.split('\t')
             i = l[0].strip()
-            r = l[1].strip()
-            hyp1 = l[4].strip()
-            hyp2 = l[5].strip()
+            if dataset == 'paws1' or dataset == 'paws2':
+                if phenomenon == 'drop':
+                    r = l[1].strip()
+                    hyp1 = l[2].strip()
+                    hyp2 = l[4].strip()
+                elif phenomenon == 'vb':
+                    r = l[1].strip()
+                    hyp1 = l[2].strip()
+                    hyp2 = l[4].strip()
+                elif phenomenon == 'jj':
+                    r = l[1].strip()
+                    hyp1 = l[2].strip()
+                    hyp2 = l[5].strip()
+                else:
+                    r = l[1].strip()
+                    hyp1 = l[2].strip()
+                    hyp2 = l[3].strip()
+            elif dataset == 'wmt':
+                if phenomenon == 'drop':
+                    r = l[3].strip()
+                    hyp1 = l[4].strip()
+                    hyp2 = l[6].strip()
+                elif phenomenon == 'vb':
+                    r = l[3].strip()
+                    hyp1 = l[4].strip()
+                    hyp2 = l[6].strip()
+                elif phenomenon == 'jj':
+                    r = l[3].strip()
+                    hyp1 = l[4].strip()
+                    hyp2 = l[7].strip()
+                else:
+                    r = l[3].strip()
+                    hyp1 = l[4].strip()
+                    hyp2 = l[5].strip()
+            
             datalist.append((i, r, hyp1, hyp2))
-        return datalist
+    
+    result_print(datalist, phenomenon, model, dataset)
+    
+    
 
 
-def result_print(test, pathh1, path2):
+def result_print(test_data, phenomenon, model, dataset):
+
     h1 = []
     h2 = []
     r = []
-    for tuple in test:
+    for tuple in test_data:
         if len(r) > 199:
             break
         i = tuple[0].strip()
-        
         r.append(tuple[1].strip())
-        
         h1.append(tuple[2].strip())
         h2.append(tuple[3].strip())
-    print(len(r))
-    score1 = nli_score(r, h1)
-    score2 = nli_score(r, h2)
-        
         
     
-    with open(pathh1, 'w', encoding='utf-8') as f:
+    score1 = nli_score(r, h1, model)
+    score2 = nli_score(r, h2, model)
+    
+    with open('nli_result/NLI'+ str(model) + '/' + dataset + '/' + phenomenon + 'h1r.txt', 'w', encoding='utf-8') as f:
         for i, s in enumerate(score1):
             f.write(str(i))
             f.write('\t')
@@ -163,7 +160,7 @@ def result_print(test, pathh1, path2):
             f.write(str(s[1][2]))
             f.write('\n')
     
-    with open(path2, 'w', encoding='utf-8') as f:
+    with open('nli_result/NLI'+ str(model) + '/' + dataset + '/' + phenomenon + 'r.txt', 'w', encoding='utf-8') as f:
         for i, s in enumerate(score2):
             f.write(str(i))
             f.write('\t')
@@ -184,11 +181,10 @@ def result_print(test, pathh1, path2):
         
         
 if __name__ == '__main__':
-    #result_print(build_list('output1/name.txt'),'output1/result1/nameh1r.txt','output1/result1/namer.txt')
-    #result_print(build_list('output1/num.txt'),'output1/result1/numh1r.txt','output1/result1/numr.txt')
-    #result_print(build_list('output1/word.txt'),'output1/result1/nnh1r.txt','output1/result1/nnr.txt')
-    #result_print(build_list('output1/neg.txt'),'output1/result1/negr.txt','output1/result1/negh1r.txt')
-    #result_print(build_list('output1/pron.txt'),'output1/result1/pronh1r.txt','output1/result1/pronr.txt')
-    #result_print(build_list('add/newaddnon.txt'),'output1/result1/add1h1r.txt','output1/result1/add1r.txt')
-    #result_print(build_list('output1/ad.txt'),'output1/result1/addh1r.txt','output1/result1/dropr.txt')
-    result_print(build_list('output1/word.txt'),'output1/result2/vbr.txt','output1/result2/jjr.txt')
+    
+    
+    # model = 1 or 2, dataset = 'wmt' or 'paws1' or 'paws2'
+    # phenomenon = 'add', 'drop', 'neg', 'nn', 'vb', 'jj', 'num', 'pron', 'name'
+    NLI_score_write(phenomenon = 'drop', model = 1, dataset = 'wmt')
+    NLI_score_write(phenomenon = 'vb', model = 1, dataset = 'paws1')
+    NLI_score_write(phenomenon = 'jj', model = 1, dataset = 'paws2')

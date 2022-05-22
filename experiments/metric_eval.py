@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-def get_data(path, dataset):
+def get_data(phenomenon, dataset):
     src = []
     ref = []
     d_r = []
@@ -10,7 +10,7 @@ def get_data(path, dataset):
     hyp3 = []
     hyp4 = []
     
-    with open(path, 'r', encoding='utf-8') as f:
+    with open('../checklist_generate/adversarial test/'+dataset+'/'+phenomenon+'.txt', 'r', encoding='utf-8') as f:
             lines = f.readlines()
             for l in lines:
                 line = l.split('\t')
@@ -24,7 +24,7 @@ def get_data(path, dataset):
                         hyp3.append(line[6])
                     if len(line) == 8:
                         hyp4.append(line[7])
-                if dataset == 'paws':
+                if dataset == 'paws1'or dataset == 'paws2':
                     d_r.append(line[1].strip())
                     hyp1.append(line[2].strip())
                     hyp2.append(line[3].strip())
@@ -111,11 +111,13 @@ def bleurt_eval(ref, hyp1, hyp2):
     score2 = scorer.score(references=ref, candidates=hyp2)
     accuracy = comp(score1, score2)
     print('bleurt: %f' % (accuracy))
+    
+
 
 if __name__ == '__main__': 
     
     # wmt test
-    src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('../checklist_generate/adversarial test/wmt/de/name.txt', 'wmt')
+    src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('name', 'wmt')
     bart_eval(d_r, hyp1, hyp2)
     bleurt_eval(d_r, hyp1, hyp2)
     bert_eval(d_r, hyp1, hyp2)
@@ -123,14 +125,14 @@ if __name__ == '__main__':
     xmover_eval(src, ref, hyp2)
     
     # paws1 test
-    src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('../checklist_generate/adversarial test/paws_1/name.txt', 'paws')
+    src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('name', 'paws1')
     bart_eval(d_r, hyp1, hyp2)
     bleurt_eval(d_r, hyp1, hyp2)
     bert_eval(d_r, hyp1, hyp2)
     mover_eval(d_r, hyp1, hyp2)
     
     # paws2 test
-    src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('../checklist_generate/adversarial test/paws_2/name.txt', 'paws')
+    src, ref, d_r, hyp1, hyp2, hyp3, hyp4 = get_data('name', 'paws2')
     bart_eval(d_r, hyp1, hyp2)
     bleurt_eval(d_r, hyp1, hyp2)
     bert_eval(d_r, hyp1, hyp2)
