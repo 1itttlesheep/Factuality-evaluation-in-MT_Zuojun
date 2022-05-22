@@ -73,7 +73,7 @@ def bart_nli(phenomenon, dataset, model, direction1, direction2):
 if __name__ == '__main__':
     
     bart_nli(d_r, hyp1, hyp2)
-    bleurt_eval(d_r, hyp1, hyp2)
-    bert_eval(d_r, hyp1, hyp2)
-    mover_eval(d_r, hyp1, hyp2)
+    # bleurt_eval(d_r, hyp1, hyp2)
+    # bert_eval(d_r, hyp1, hyp2)
+    # mover_eval(d_r, hyp1, hyp2)
     
