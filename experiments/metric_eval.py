@@ -59,9 +59,9 @@ def bart_eval(ref, hyp1, hyp2):
 def bert_eval(ref, hyp1, hyp2):
     from bertscore import be_score
     
-    (_, r1, _), _ = be_score(hyp1, ref, lang="en", return_hash=True)  
-    (_, r2, _), _ = be_score(hyp2, ref, lang="en", return_hash=True)  
-    accuracy = comp(r1, r2)
+    (f1, _, _), _ = be_score(hyp1, ref, lang="en", return_hash=True)  
+    (f2, _, _), _ = be_score(hyp2, ref, lang="en", return_hash=True)  
+    accuracy = comp(f1, f2)
     print('bertscore: %f' % (accuracy))
     
 def mover_eval(ref, hyp1, hyp2):

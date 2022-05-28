@@ -127,12 +127,23 @@ def formula_result(model, dataset, direction1, direction2):
     return mean
         
 if __name__ == '__main__':
-    for i in range(1,7):
-        print("----------")
-        for j in range(1,8):
-            wmt = formula_result(1,'wmt',j,i)
-            paws1 = formula_result(1,'paws1',j,i)
-            paws2 = formula_result(1,'paws2',j,i)
+    model = 1 # or 2
+    dataset = 'wmt' # or 'paws1', 'paws2'
+    print(dataset)
+    for i in range(1,8):
+        print('first direction: %i' % i)
+        for j in range (1,7):
+            result = formula_result(model,dataset,i,j)
+            print(result)
+    
+    print("----------")
+    print("average")       
+    for i in range(1,8):    
+        print('first direction: %i' % i)
+        for j in range(1,7):
+            wmt = formula_result(model,'wmt',i,j)
+            paws1 = formula_result(model,'paws1',i,j)
+            paws2 = formula_result(model,'paws2',i,j)
             print((wmt+paws1+paws2)/3)
             
 
