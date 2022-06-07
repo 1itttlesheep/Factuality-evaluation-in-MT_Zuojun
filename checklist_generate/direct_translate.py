@@ -9,13 +9,16 @@ tokenizer_b = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-de-en")
 model_b = AutoModelForSeq2SeqLM.from_pretrained("Helsinki-NLP/opus-mt-de-en")
 
 ref = []
+i = 0
 with open('news-commentary-v15.de-en.tsv', 'r', encoding='utf-8') as f:
     lines = f.readlines()
     for i, l in enumerate(lines):
         sen = l.split('\t')
-        s = sen[0].strip()
-        r = sen[1].strip()
-        ref.append((i, s, r))
+        if len(sen[0]) > 70 and len(sen[0]) < 140:
+            i += 1
+            s = sen[0].strip()
+            r = sen[1].strip()
+            ref.append((i, s, r))
 
 hyp = []
 for p in ref:
